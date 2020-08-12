@@ -143,3 +143,6 @@ class SQLiteDao {
 //   await SQLiteDao.modifyDescription(id + 1, 'Kuukkeli ei toiminut..')
 //   console.log('description to', await SQLiteDao.read(id + 1))  
 // }
+
+
+module.exports = SQLiteDao

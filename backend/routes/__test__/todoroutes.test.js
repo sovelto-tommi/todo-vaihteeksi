@@ -1,5 +1,6 @@
 const request = require('supertest')
 const app = require('../../app')
+const dao = require('../../data/db')
 
 test('Initial test, todoroute is found', () => {
   return request(app)
@@ -9,3 +10,36 @@ test('Initial test, todoroute is found', () => {
       expect(response.body).not.toBeNull()
     })
 })
+
+describe('ToDo API GET tests', () => {
+  test('Reading all todos include a manually created Todo', async () => {
+    const id = await dao.createTodo('Duuude')
+    return request(app)
+      .get('/api/todos')
+      .expect(200)
+      .then(response => {
+        expect(response.body.length).toBeGreaterThanOrEqual(1)
+        const last = response.body[response.body.length-1]
+        expect(last.description).toEqual('Duuude')
+        expect(last.done).toBeFalsy()
+    })
+  })
+  test('A single ToDo can be fetched', async () => {
+    const id = await dao.createTodo('Singleton')
+    return request(app)
+      .get(`/api/todos/${id}`)
+      .expect(200)
+      .then(response => {
+        expect(response.body.description).toEqual('Singleton')
+      })
+  })
+  test('A nonexisting id for a todo returns not found', async () => {
+    // Rather sure we didn't autoincrement to a this big id
+    const id = Number.MAX_SAFE_INTEGER - 42  
+    return request(app)
+      .get(`/api/todos/${id}`)
+      .expect(404)
+  })
+
+})
+
