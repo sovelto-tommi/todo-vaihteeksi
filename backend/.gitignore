@@ -1,6 +1,9 @@
 # DB file
 *.db
 
+# Public only for built frontend
+/public
+
 # Logs
 logs
 *.log
