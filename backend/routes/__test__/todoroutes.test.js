@@ -1,6 +1,8 @@
 const request = require('supertest')
 const app = require('../../app')
 const dao = require('../../data/db')
+const debug = require('debug')('todoserver:tests')
+
 
 test('Initial test, todoroute is found', () => {
   return request(app)
@@ -41,5 +43,28 @@ describe('ToDo API GET tests', () => {
       .expect(404)
   })
 
+})
+
+describe('ToDo API create tests', () => {
+  test('A simple ToDo is created properly', () => {
+    debug('About to post')
+    return request(app)
+      .post('/api/todos')
+      .send({ description: 'Do it!' })
+      .expect(201) 
+      .expect('Location', /api\/todos\/\d+$/)
+      .then(res => {
+        const createdid = res.headers['location'].split('/').pop()
+        debug('Created: ' + createdid)
+        return request(app).
+          get(`/api/todos/${createdid}`)
+          .expect(200)
+          .then(resp => {
+            expect(resp.body.description).toEqual('Do it!')
+            expect(resp.body.done).toBeFalsy()
+            expect(resp.body.due_date).toEqual(new Date().toISOString().split('T')[0])
+          })
+      })
+  })
 })
 

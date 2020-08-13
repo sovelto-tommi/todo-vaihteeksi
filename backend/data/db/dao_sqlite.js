@@ -1,4 +1,5 @@
 const sqlite3 = require('sqlite3').verbose()
+const config = require('../../config')
 const debug = require('debug')('todoserver:dao:sqlite3')
 
 // We want to use Promises, so instead of getting yet
@@ -43,7 +44,7 @@ class PromisedSQLite {
 }
 
 // Connect to a database, or create one if it doesn't exist
-const db = new sqlite3.Database('./data/db/todos.db', err => {
+const db = new sqlite3.Database(config.db.SQLiteDBName, err => {
   if (err) {
     console.error(err.message)
     process.exit(2)
