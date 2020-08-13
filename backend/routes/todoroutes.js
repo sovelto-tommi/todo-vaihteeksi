@@ -14,14 +14,15 @@ router.route('/')
       res.status(400).json({ error: 'Missing ToDo description' })
       return
     }
-    dao.createTodo(payload.description).then(id => {
+    dao.createTodo(payload.description).then(async id => {
       let requrl = url.format({
         protocol: req.protocol,
         host: req.get('host'),
         pathname: req.originalUrl
       })
+      const created = await dao.read(id)
       const locationurl = `${requrl}/${id}`
-      res.location(locationurl).status(201).send()
+      res.location(locationurl).status(201).send(created)
     })
   })
 
