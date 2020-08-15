@@ -2,7 +2,7 @@
 *.db
 
 # Public only for built frontend
-/public
+public/
 
 # Logs
 logs

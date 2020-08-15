@@ -1,9 +1,10 @@
+require('dotenv').config()
 
 const env = process.env.NODE_ENV || 'development'
 
 const development = {
   app: {
-    port: process.env.PORT || 3000,
+    port: process.env.PORT || 5000,
     development: true
   },
   db: {
@@ -13,7 +14,7 @@ const development = {
 
 const test = {
   app: {
-    port: process.env.PORT || 3003,
+    port: process.env.PORT || 5003,
     development: true
   },
   db: {
@@ -21,9 +22,20 @@ const test = {
   }
 }
 
+const production = {
+  app: {
+    port: process.env.PORT || 5000,
+    development: false
+  },
+  db: {
+    SQLiteDBName: './data/db/todos.db'
+  }
+}
+
 const config = {
   development,
-  test
+  test,
+  production
 }
 
 module.exports = config[env]
